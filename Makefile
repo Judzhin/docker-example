@@ -1,14 +1,8 @@
-# —— Inspired by ———————————————————————————————————————————————————————————————
-# http://fabien.potencier.org/symfony4-best-practices.html
-# https://speakerdeck.com/mykiwi/outils-pour-ameliorer-la-vie-des-developpeurs-symfony?slide=47
-# https://blog.theodo.fr/2018/05/why-you-need-a-makefile-on-your-project/
-
 # Setup ————————————————————————————————————————————————————————————————————————
-SHELL = bash
-PROJECT = strangebuzz
+AUTHOR = judzhin
+PROJECT = cowsay
 GIT = git
-GIT_AUTHOR = judzhin
-DOCKER = docker-compose
+DOCKER = docker
 
 .DEFAULT_GOAL = help
 #.PHONY = # Not needed for now
@@ -21,14 +15,15 @@ wait: ## Sleep 5 seconds
 	sleep 5
 
 ## ——  Docker  ————————————————————————————————————————————————————————————————
-up: docker-compose.yaml ## Start the docker hub (MySQL,redis,adminer,elasticsearch,head,Kibana)
-	$(DOCKER) -f docker-compose.yaml up -d
+build: Dockerfile ## Build Docker Image From Dockerfile
+	$(DOCKER) build -t $(AUTHOR)/$(PROJECT) .
 
-down: docker-compose.yaml ## Stop the docker hub
-	$(DOCKER) down --remove-orphans
+hello-world: ## Show Hello World From Container
+	$(DOCKER) run $(AUTHOR)/$(PROJECT) "Hello World!"
 
-rebuild: down up ## Stop and start the docker hub
+push: ## Push image to Docker repository
+	$(DOCKER) push $(AUTHOR)/$(PROJECT)
 
 ## ——  Stats  —————————————————————————————————————————————————————————————————
 stats: ## Commits by hour for the main author of this project
-	$(GIT) log --author="$(GIT_AUTHOR)" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]{10}\s(\d{2})/) { say $$1+0 }' | sort | uniq -c|perl -MList::Util=max -nalE '$$h{$$F[1]} = $$F[0]; }{ $$m = max values %h; foreach (0..23) { $$h{$$_} = 0 if not exists $$h{$$_} } foreach (sort {$$a <=> $$b } keys %h) { say sprintf "%02d - %4d %s", $$_, $$h{$$_}, "*"x ($$h{$$_} / $$m * 50); }'
+	$(GIT) log --author="$(AUTHOR)" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]{10}\s(\d{2})/) { say $$1+0 }' | sort | uniq -c|perl -MList::Util=max -nalE '$$h{$$F[1]} = $$F[0]; }{ $$m = max values %h; foreach (0..23) { $$h{$$_} = 0 if not exists $$h{$$_} } foreach (sort {$$a <=> $$b } keys %h) { say sprintf "%02d - %4d %s", $$_, $$h{$$_}, "*"x ($$h{$$_} / $$m * 50); }'

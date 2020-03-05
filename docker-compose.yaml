@@ -4,25 +4,23 @@ services:
 
   database:
     container_name: database
-    build:
-      context: .
-      dockerfile: docker/mysql/Dockerfile
+    build: docker/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${PMA_PASSWORD:-root}
     restart: always
     ports:
-      - ${DATABASE_PORT:-3306}:3306
+      - ${PMA_PORT:-3306}:3306
     volumes:
-    - ./data:/var/lib/mysql
+      - ./data:/var/lib/mysql
 
   pma:
     image: phpmyadmin/phpmyadmin
-    ports:
-      - ${PHP_MY_ADMIN_PORT:-8080}:80
     environment:
       PMA_HOST: database
-      PMA_USER: root
-      PMA_PASSWORD: root
-      PMA_PORT: ${DATABASE_PORT:-3306}
+      PMA_USER: ${PMA_USER:-root}
+      PMA_PASSWORD: ${PMA_PASSWORD:-root}
+      PMA_PORT: ${PMA_PORT:-3306}
     links:
       - database:db
+    ports:
+      - ${HOST_PORT:-8080}:80

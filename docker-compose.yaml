@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+
+  database:
+    # image: mysql
+    # image: mariadb
+    image: percona
+    container_name: database
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    ports:
+      - 3306:3306
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_PORT: 3306

@@ -42,5 +42,11 @@ lazy-push:
 lazy-deploy: lazy-commit lazy-push
 
 ## ——  Stats  —————————————————————————————————————————————————————————————————
-stats: ## Commits by hour for the main author of this project
-	$(GIT) log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+import:
+	$(GIT) config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+
+log: ## Commits by hour for the main author of this project
+	$(GIT) lg
+
+print: ## Commits by hour for the main author of this project
+	$(GIT) lg -p

@@ -32,21 +32,33 @@ push: ## Push image to Docker repository
 
 deploy: commit build push ## Lazy command for build and pushing to docker hub
 
+clear: ## Clear stoped containers
+	docker rm -v $(docker ps -aq -f status=exited)
+
 ## ——  Git  ———————————————————————————————————————————————————————————————————
-lazy-commit:
+lazy-commit: ## Add and fix changes
 	$(GIT) add . && $(GIT) commit -am "Lazy Intermedaite commit"
 
-lazy-push:
+lazy-push: ## Push fix changes
 	$(GIT) push
 
-lazy-deploy: lazy-commit lazy-push
+lazy-deploy: lazy-commit lazy-push ## Lazy Command for Commit and Push to repository
 
-## ——  Stats  —————————————————————————————————————————————————————————————————
-import:
-	$(GIT) config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+## ——  Profiler  —————————————————————————————————————————————————————————————————
+log: ## One liner with colors
+	$(GIT) log --color --graph --pretty=format:'%Cred[%h] %Cred%ad%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=short
 
-log: ## Commits by hour for the main author of this project
-	$(GIT) lg
+log1:
+	$(GIT) log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+
+log2:
+	$(GIT) log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+
+graph: ## One liner with colors
+	$(GIT) log --graph --oneline --decorate --all
+
+last: ## One liner with colors
+	$(GIT) log -p -1
 
 print: ## Commits by hour for the main author of this project
 	$(GIT) lg -p

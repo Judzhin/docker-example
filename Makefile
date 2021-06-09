@@ -96,24 +96,24 @@ login: ## Login to Docker Hub.
 ## ——  Custom Commands  —————————————————————————————————————————————————————————————————
 cli: ## Run CLI
 	$(info Make: Run CLI)
-	@docker-compose exec php-fpm bash
+	@docker-compose exec hello-world bash
 	# @docker run -it --name $(PROJECT) --hostname $(PROJECT) ubuntu:bionic bash
 
 ## ——  Profiler  —————————————————————————————————————————————————————————————————
+#log: ## One liner with colors
+#	@git log --color --graph --pretty=format:'%Cred[%h] %Cred%ad%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=short
+#
+#log: ## One liner with colors
+#	@git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+#
 log: ## One liner with colors
-	$(GIT) log --color --graph --pretty=format:'%Cred[%h] %Cred%ad%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(blue)<%an>%Creset' --abbrev-commit --date=short
-
-log1:
-	$(GIT) log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-
-log2:
-	$(GIT) log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	@git log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
 
 graph: ## One liner with colors
-	$(GIT) log --graph --oneline --decorate --all
+	@git log --graph --oneline --decorate --all
 
-last: ## One liner with colors
-	$(GIT) log -p -1
+last: ## Show last commit
+	@git log -p -1
 
 print: ## Commits by hour for the main author of this project
-	$(GIT) lg -p
+	@git log -p

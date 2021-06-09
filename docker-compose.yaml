@@ -2,7 +2,6 @@ version: '3.5'
 
 services:
   hello-world:
-    restart: always
     container_name: hello-world-${APP_ENV:-dev}
     build:
       context: .
